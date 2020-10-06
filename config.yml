@@ -1,0 +1,10 @@
+ServerPrefix: '&7[&3&lAwesomeChallenges&7]&r'
+
+#Title of the menu that opens when you type /challenge
+ChallengeMenuTitle: '&3&lAwesomeChallenges'
+
+#Messages
+NoPermission: '&cNo permission'
+ConfigsReloaded: '&eSuccessfully reloaded all configurations.'
+TierUp: '&eYou finished tier &9%tier% &ein &c%challenge%'
+ChallengeComplete: '&eYou finished all tiers in &c%challenge%'
