@@ -43,6 +43,36 @@ public class Main extends JavaPlugin{
 		
 		setChallenges();
 		Save();
+		
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("AwesomeChallenges"), new Runnable() {
+		    @Override
+		    public void run() {
+		    	for (String s : cYaml.getKeys(false)) {
+		    		String type = cYaml.getString(s + ".Type");
+		    		if (type.equals("Playtime")) {
+		    			for (Player p : Bukkit.getOnlinePlayers()) {
+			    			pYaml.set(p.getName() + "." + type + "." + s + ".Amount", pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") + 1);
+					        int tier = pYaml.getInt(p.getName() + ".Playtime." + s + ".Tier");
+					        if (pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") >= cYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount")) {
+								pYaml.set(p.getName() + ".Playtime." + s + ".Amount", pYaml.getInt(p.getName() + ".Playtime." + s + ".Amount") - cYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount"));
+								pYaml.set(p.getName() + ".Playtime." + s + ".Tier", tier + 1);
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cYaml.getString(s + ".Tier" + String.valueOf(tier) + ".Command").replace("%player%", p.getName()));
+								if (tier == cYaml.getInt(s + ".TierNumber")) {
+									sendMsgWithPrefix(getConfig().getString("ChallengeComplete").replace("%challenge%", s), p);
+								} else {
+									sendMsgWithPrefix(getConfig().getString("TierUp").replace("%tier%", String.valueOf(tier)).replace("%challenge%", s), p);
+								}
+					        }
+		    			}
+		    		}
+		    	}
+		        try {
+					pYaml.save(pFile);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		    }
+		}, 20L, 20L);
 	}
 	
 	public void Save() {
@@ -87,12 +117,6 @@ public class Main extends JavaPlugin{
 			String[] Commands = {"give %player% diamond 5", "give %player% diamond 16", "give %player% diamond 64", "give %player% minecraft:diamond_block 64"};
 			challengeHook("Coal", "Mine", "COAL_ORE", 4, Amounts, "COAL", "Mine some Coal", "Mine %amount% Coal (%collected%/%amount%)", Rewards, Commands);
 		}
-		if (!cYaml.contains("Iron")) {
-			int[] Amounts = {100, 500, 2000};
-			String[] Rewards = {"5x Diamond", "16x Diamond", "64x Diamond"};
-			String[] Commands = {"give %player% diamond 5", "give %player% diamond 16", "give %player% diamond 64"};
-			challengeHook("Iron", "Mine", "IRON_ORE", 3, Amounts, "IRON_INGOT", "Mine some Iron", "Mine %amount% Iron (%collected%/%amount%)", Rewards, Commands);
-		}
 		if (!cYaml.contains("Diamond")) {
 			int[] Amounts = {10, 30, 100};
 			String[] Rewards = {"2x Netherite", "8x Netherite", "32x Netherite"};
@@ -123,6 +147,12 @@ public class Main extends JavaPlugin{
 			String[] Rewards = {"1x Diamond", "3x Diamond", "10x Diamond"};
 			String[] Commands = {"give %player% diamond 1", "give %player% diamond 3", "give %player% diamond 10"};
 			challengeHook("Cow", "Kill", "COW", 3, Amounts, "COW_SPAWN_EGG", "Kill some Cows", "Kill %amount% Cows (%collected%/%amount%)", Rewards, Commands);
+		}
+		if (!cYaml.contains("Spend Time")) {
+			int[] Amounts = {3600, 10800, 36000};
+			String[] Rewards = {"3x Diamond", "10x Diamond", "32x Diamond"};
+			String[] Commands = {"give %player% diamond 3", "give %player% diamond 10", "give %player% diamond 32"};
+			challengeHook("Spend Time", "Playtime", "Seconds", 3, Amounts, "CLOCK", "Spend some time", "Achieve %amount% seconds of playtime (%collected%/%amount%)", Rewards, Commands);
 		}
 	}
 	
