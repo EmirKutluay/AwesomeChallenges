@@ -6,5 +6,5 @@ ChallengeMenuTitle: '&3&lAwesomeChallenges'
 #Messages
 NoPermission: '&cNo permission'
 ConfigsReloaded: '&eSuccessfully reloaded all configurations.'
-TierUp: '&eYou finished tier &9%tier% &ein &c%challenge%'
-ChallengeComplete: '&eYou finished all tiers in &c%challenge%'
+TierUp: '&eYou finished tier &9%tier% &ein &c%challenge% &eand received your rewards.'
+ChallengeComplete: '&eYou finished all tiers in &c%challenge% &eand received your rewards.'
