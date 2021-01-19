@@ -1,7 +1,6 @@
 package com.emiv.awesomechallenges;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -36,10 +35,7 @@ public class onCraft implements Listener {
 					if (plugin.getPYaml().getInt(p.getName() + ".Craft." + s + ".Amount") >= plugin.getCYaml().getInt(s + ".Tier" + String.valueOf(tier) + ".Amount")) {
 						plugin.getPYaml().set(p.getName() + ".Craft." + s + ".Amount", plugin.getPYaml().getInt(p.getName() + ".Craft." + s + ".Amount") - plugin.getCYaml().getInt(s + ".Tier" + String.valueOf(tier) + ".Amount"));
 						plugin.getPYaml().set(p.getName() + ".Craft." + s + ".Tier", tier + 1);
-						List<String> commandList = plugin.getCYaml().getStringList(s + ".Tier" + String.valueOf(tier) + ".Commands");
-						for (String c: commandList) {
-							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
-						}
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), plugin.getCYaml().getString(s + ".Tier" + String.valueOf(tier) + ".Command").replace("%player%", p.getName()));
 						if (tier == plugin.getCYaml().getInt(s + ".TierNumber")) {
 							plugin.sendMsgWithPrefix(plugin.getConfig().getString("ChallengeComplete").replace("%challenge%", s), p);
 						} else {

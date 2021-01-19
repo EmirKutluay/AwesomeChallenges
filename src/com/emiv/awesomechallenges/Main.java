@@ -2,8 +2,6 @@ package com.emiv.awesomechallenges;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -58,10 +56,7 @@ public class Main extends JavaPlugin{
 					        if (pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") >= cYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount")) {
 								pYaml.set(p.getName() + ".Playtime." + s + ".Amount", pYaml.getInt(p.getName() + ".Playtime." + s + ".Amount") - cYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount"));
 								pYaml.set(p.getName() + ".Playtime." + s + ".Tier", tier + 1);
-								List<String> commandList = cYaml.getStringList(s + ".Tier" + String.valueOf(tier) + ".Commands");
-								for (String c: commandList) {
-									Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
-								}
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cYaml.getString(s + ".Tier" + String.valueOf(tier) + ".Command").replace("%player%", p.getName()));
 								if (tier == cYaml.getInt(s + ".TierNumber")) {
 									sendMsgWithPrefix(getConfig().getString("ChallengeComplete").replace("%challenge%", s), p);
 								} else {
@@ -119,69 +114,49 @@ public class Main extends JavaPlugin{
 		if (!cYaml.contains("Coal")) {
 			int[] Amounts = {250, 1000, 5000, 20000};
 			String[] Rewards = {"5x Diamond", "16x Diamond", "64x Diamond", "64x Diamond Block"};
-			String[] tierOne = {"give %player% diamond 5"};
-			String[] tierTwo = {"give %player% diamond 16"};
-			String[] tierThree = {"give %player% diamond 64"};
-			String[] tierFour = {"give %player% minecraft:diamond_block 64"};
-			String[][] Commands = {tierOne, tierTwo, tierThree, tierFour};
+			String[] Commands = {"give %player% diamond 5", "give %player% diamond 16", "give %player% diamond 64", "give %player% minecraft:diamond_block 64"};
 			challengeHook("Coal", "Mine", "COAL_ORE", 4, Amounts, "COAL", "Mine some Coal", "Mine %amount% Coal (%collected%/%amount%)", Rewards, Commands);
 		}
 		if (!cYaml.contains("Diamond")) {
 			int[] Amounts = {10, 30, 100};
 			String[] Rewards = {"2x Netherite", "8x Netherite", "32x Netherite"};
-			String[] tierOne = {"give %player% netherite_ingot 2"};
-			String[] tierTwo = {"give %player% netherite_ingot 8"};
-			String[] tierThree = {"give %player% netherite_ingot 24"};
-			String[][] Commands = {tierOne, tierTwo, tierThree};
+			String[] Commands = {"give %player% netherite_ingot 2", "give %player% netherite_ingot 8", "give %player% netherite_ingot 24"};
 			challengeHook("Diamond", "Mine", "DIAMOND_ORE", 3, Amounts, "DIAMOND", "Mine some Diamonds", "Mine %amount% Diamonds (%collected%/%amount%)", Rewards, Commands);
 		}
 		if (!cYaml.contains("Furnace")) {
 			int[] Amounts = {1, 3, 10};
-			String[] Rewards = {"2x Coal Block & 1x Diamond & 1x Levels", "8x Coal Block & 3x Diamond & 3x Levels", "32x Coal Block & 10x Diamond & 10x Levels"};
-			String[] tierOne = {"give %player% coal_block 2", "give %player% diamond 1", "xp add %player% 1 levels"};
-			String[] tierTwo = {"give %player% coal_block 8", "give %player% diamond 3", "xp add %player% 3 levels"};
-			String[] tierThree = {"give %player% coal_block 32", "give %player% diamond 10", "xp add %player% 10 levels"};
-			String[][] Commands = {tierOne, tierTwo, tierThree};
+			String[] Rewards = {"2x Coal Block", "8x Coal Block", "32x Coal Block"};
+			String[] Commands = {"give %player% coal_block 2", "give %player% coal_block 8", "give %player% coal_block 32"};
 			challengeHook("Furnace", "Craft", "FURNACE", 3, Amounts, "FURNACE", "Craft some Furnace", "Craft %amount% Furnace (%collected%/%amount%)", Rewards, Commands);
 		}
 		if (!cYaml.contains("Enchanting Table")) {
 			int[] Amounts = {1};
-			String[] Rewards = {"15x Lapis Lazuli & 5x Levels"};
-			String[] tierOne = {"give %player% lapis_lazuli 15", "xp add %player% 5 levels"};
-			String[][] Commands = {tierOne};
+			String[] Rewards = {"15x Lapis Lazuli"};
+			String[] Commands = {"give %player% lapis_lazuli 15"};
 			challengeHook("Enchanting Table", "Craft", "ENCHANTING_TABLE", 1, Amounts, "ENCHANTING_TABLE", "Craft an Enchanting Table", "Craft %amount% Enchanting Table (%collected%/%amount%)", Rewards, Commands);
 		}
 		if (!cYaml.contains("Chicken")) {
 			int[] Amounts = {16, 32, 64};
 			String[] Rewards = {"1x Diamond", "2x Diamond", "5x Diamond"};
-			String[] tierOne = {"give %player% diamond 1"};
-			String[] tierTwo = {"give %player% diamond 2"};
-			String[] tierThree = {"give %player% diamond 5"};
-			String[][] Commands = {tierOne, tierTwo, tierThree};
+			String[] Commands = {"give %player% diamond 1", "give %player% diamond 2", "give %player% diamond 5"};
 			challengeHook("Chicken", "Smelt", "COOKED_CHICKEN", 3, Amounts, "COOKED_CHICKEN", "Cook some Chicken", "Cook %amount% Chicken (%collected%/%amount%)", Rewards, Commands);
 		}
 		if (!cYaml.contains("Cow"))
 		{
 			int[] Amounts = {16, 32, 64};
 			String[] Rewards = {"1x Diamond", "3x Diamond", "10x Diamond"};
-			String[] tierOne = {"give %player% diamond 1"};
-			String[] tierTwo = {"give %player% diamond 3"};
-			String[] tierThree = {"give %player% diamond 10"};
-			String[][] Commands = {tierOne, tierTwo, tierThree};
+			String[] Commands = {"give %player% diamond 1", "give %player% diamond 3", "give %player% diamond 10"};
 			challengeHook("Cow", "Kill", "COW", 3, Amounts, "COW_SPAWN_EGG", "Kill some Cows", "Kill %amount% Cows (%collected%/%amount%)", Rewards, Commands);
 		}
 		if (!cYaml.contains("Spend Time")) {
 			int[] Amounts = {3600, 10800, 36000};
-			String[] Rewards = {"3x Diamond & 10x Coal", "10x Diamond & 32x Coal", "32x Diamond & 128x Coal"};
-			String[] tierOne = {"give %player% diamond 3", "give %player% coal 10"};
-			String[] tierTwo = {"give %player% diamond 10", "give %player% coal 32"};
-			String[] tierThree = {"give %player% diamond 32", "give %player% coal 128"};
-			String[][] Commands = {tierOne, tierTwo, tierThree};
+			String[] Rewards = {"3x Diamond", "10x Diamond", "32x Diamond"};
+			String[] Commands = {"give %player% diamond 3", "give %player% diamond 10", "give %player% diamond 32"};
 			challengeHook("Spend Time", "Playtime", "Seconds", 3, Amounts, "CLOCK", "Spend some time", "Achieve %amount% seconds of playtime (%collected%/%amount%)", Rewards, Commands);
 		}
 	}
 	
-	void challengeHook(String name, String type, String object, int tierNumber, int[] amounts, String icon, String desc, String task, String[] rewards, String[][] commands) {
+	void challengeHook(String name, String type, String object, int tierNumber, int[] amounts, String icon, String desc, String task, String[] rewards, String[] commands) {
 		cYaml.set(name + ".Type", type);
 		cYaml.set(name + ".Object", object);
 		cYaml.set(name + ".TierNumber", tierNumber);
@@ -195,7 +170,7 @@ public class Main extends JavaPlugin{
 			cYaml.set(name + ".Tier" + String.valueOf(i + 1) + ".Reward", rewards[i]);
 		}
 		for (int i = 0; i < tierNumber; i++) {
-			cYaml.set(name + ".Tier" + String.valueOf(i + 1) + ".Commands", Arrays.asList(commands[i])); 
+			cYaml.set(name + ".Tier" + String.valueOf(i + 1) + ".Command", commands[i]);
 		}
 		
 	}
