@@ -22,8 +22,11 @@ public class Main extends JavaPlugin{
 	private File pFile;
 	private YamlConfiguration pYaml;
 	
+	
+	boolean challengesSet = false;
+	
 	@Override
-	public void onEnable() {		
+	public void onEnable() {				
 		
 		this.saveDefaultConfig();
 		
@@ -43,7 +46,9 @@ public class Main extends JavaPlugin{
 			e.printStackTrace();
 		}
 		
-		setChallenges();
+		if (challengesSet == false) {
+			setChallenges();
+		}
 		Save();
 		
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("AwesomeChallenges"), new Runnable() {
@@ -102,6 +107,8 @@ public class Main extends JavaPlugin{
 		cFile = new File(Bukkit.getServer().getPluginManager().getPlugin("AwesomeChallenges").getDataFolder(), "challenges.yml");
 		if (!cFile.exists()) {
 			cFile.createNewFile();
+		} else {
+			challengesSet = true;
 		}
 		
 		cYaml = YamlConfiguration.loadConfiguration(cFile);
