@@ -31,8 +31,17 @@ public class onJoin implements Listener {
 				plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Amount", 0);
 				plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Tier", 1);
 			}
-			Save();
+		} else {
+			Player p = e.getPlayer();
+			for (String s : plugin.getCYaml().getKeys(false)) {
+				String type = plugin.getCYaml().getString(s + ".Type");
+				if (!plugin.getPYaml().contains(p.getName() + "." + type + "." + s + ".Amount")) {
+					plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Amount", 0);
+					plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Tier", 1);
+				}
+			}
 		}
+		Save();
 	}
 	
 }
