@@ -56,7 +56,7 @@ public class ChallengeCommand implements CommandExecutor {
 
 		}
 		if (playerCh.size() == 0) {
-			//No Active Challenge
+			plugin.sendMsgWithPrefix(plugin.getConfig().getString("NoActiveChallenge"), p);
 		} else if (playerCh.size() > 0 && playerCh.size() <= 28) {
 			if (playerCh.size() > 0 && playerCh.size() <= 7) {
 				createPage(p, playerCh.size(), 27, playerCh);
@@ -68,7 +68,7 @@ public class ChallengeCommand implements CommandExecutor {
 				createPage(p, playerCh.size(), 54, playerCh);
 			}
 		} else {
-			
+			plugin.sendMsgWithPrefix("&cNumber of challenges is more than the plugin supports, please contact an administrator", p);
 		}
 		
 	}
