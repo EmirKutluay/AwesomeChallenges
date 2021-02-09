@@ -50,6 +50,31 @@ public class onSmelt implements Listener {
 				}
 			}
 		}
+		if (p.hasPermission("awesomechallenges.premium")) {
+			if (plugin.getConfig().getString("PremiumChallenges").equals("true")) {
+				for (String s : plugin.getVYaml().getKeys(false)) {
+					if (plugin.getVYaml().getString(s + ".Type").equals("Smelt")) {
+						if (e.getItemType() == Material.getMaterial(plugin.getVYaml().getString(s + ".Object"))) {
+							plugin.getPYaml().set(p.getName() + ".Smelt." + s + ".Amount", plugin.getPYaml().getInt(p.getName() + ".Smelt." + s + ".Amount") + 	e.getItemAmount());
+							int tier = plugin.getPYaml().getInt(p.getName() + ".Smelt." + s + ".Tier");
+							if (plugin.getPYaml().getInt(p.getName() + ".Smelt." + s + ".Amount") >= plugin.getVYaml().getInt(s + ".Tier" + String.valueOf(tier) + ".Amount")) {
+								plugin.getPYaml().set(p.getName() + ".Smelt." + s + ".Amount", plugin.getPYaml().getInt(p.getName() + ".Smelt." + s + ".Amount") - plugin.getVYaml().getInt(s + ".Tier" + String.valueOf(tier) + ".Amount"));
+								plugin.getPYaml().set(p.getName() + ".Smelt." + s + ".Tier", tier + 1);
+								List<String> commandList = plugin.getVYaml().getStringList(s + ".Tier" + String.valueOf(tier) + ".Commands");
+								for (String c: commandList) {
+									Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
+								}
+								if (tier == plugin.getVYaml().getInt(s + ".TierNumber")) {
+									plugin.sendMsgWithPrefix(plugin.getConfig().getString("ChallengeComplete").replace("%challenge%", s), p);
+								} else {
+									plugin.sendMsgWithPrefix(plugin.getConfig().getString("TierUp").replace("%tier%", String.valueOf(tier)).replace("%challenge%", s), p);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		save();
 	}
 	

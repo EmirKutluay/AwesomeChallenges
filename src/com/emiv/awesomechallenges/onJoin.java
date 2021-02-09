@@ -31,6 +31,15 @@ public class onJoin implements Listener {
 				plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Amount", 0);
 				plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Tier", 1);
 			}
+			if (p.hasPermission("awesomechallenges.premium")) {
+				if (plugin.getConfig().getString("PremiumChallenges").equals("true")) {
+					for (String s : plugin.getVYaml().getKeys(false)) {
+						String type = plugin.getVYaml().getString(s + ".Type");
+						plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Amount", 0);
+						plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Tier", 1);
+					}
+				}			
+			}
 		} else {
 			Player p = e.getPlayer();
 			for (String s : plugin.getCYaml().getKeys(false)) {
@@ -38,6 +47,17 @@ public class onJoin implements Listener {
 				if (!plugin.getPYaml().contains(p.getName() + "." + type + "." + s + ".Amount")) {
 					plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Amount", 0);
 					plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Tier", 1);
+				}
+			}
+			if (p.hasPermission("awesomechallenges.premium")) {
+				if (plugin.getConfig().getString("PremiumChallenges").equals("true")) {
+					for (String s : plugin.getVYaml().getKeys(false)) {
+						String type = plugin.getVYaml().getString(s + ".Type");
+						if (!plugin.getPYaml().contains(p.getName() + "." + type + "." + s + ".Amount")) {
+							plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Amount", 0);
+							plugin.getPYaml().set(p.getName() + "." + type + "." + s + ".Tier", 1);
+						}
+					}
 				}
 			}
 		}

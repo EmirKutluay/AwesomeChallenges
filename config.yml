@@ -1,10 +1,23 @@
 ServerPrefix: '&7[&3&lAwesomeChallenges&7]&r'
 
+#Enable/Disable Premium Challenges
+PremiumChallenges: 'true'
+
 #Title of the menu that opens when you type /challenge
 ChallengeMenuTitle: '&3&lAwesomeChallenges'
+UserChallengesTitle: '&3&lChallenges'
+PremiumChallengesTitle: '&d&lPremium Challenges'
+
+#Prefix for name of the challenges
+ChallengeTags: '&9&l%challengeName% (Tier %challengeTier%)'
+
+#Challenge information
+ChallengeTaskTitle: '&a&lTasks:'
+ChallengeRewardTitle: '&a&lRewards:'
 
 #Messages
 NoPermission: '&cNo permission'
+NoPermissionForPremium: '&cOnly Premium users can access Premium Challenges'
 ConfigsReloaded: '&eSuccessfully reloaded all configurations.'
 TierUp: '&eYou finished tier &9%tier% &ein &c%challenge% &eand received your rewards.'
 ChallengeComplete: '&eYou finished all tiers in &c%challenge% &eand received your rewards.'

@@ -18,12 +18,19 @@ public class Main extends JavaPlugin{
 	private File cFile;
 	private YamlConfiguration cYaml;
 	
+	//Premium Challenges
+	private File vFile;
+	private YamlConfiguration vYaml;
+	
 	//Progress
 	private File pFile;
 	private YamlConfiguration pYaml;
 	
 	
+	
+	
 	boolean challengesSet = false;
+	boolean premiumSet = false;
 	
 	@Override
 	public void onEnable() {				
@@ -48,6 +55,9 @@ public class Main extends JavaPlugin{
 		
 		if (challengesSet == false) {
 			setChallenges();
+		}
+		if (premiumSet == false) {
+			setPremium();
 		}
 		Save();
 		
@@ -76,6 +86,30 @@ public class Main extends JavaPlugin{
 		    			}
 		    		}
 		    	}
+		    	for (String s : vYaml.getKeys(false)) {
+		    		String type = vYaml.getString(s + ".Type");
+		    		if (type.equals("Playtime")) {
+		    			for (Player p : Bukkit.getOnlinePlayers()) {
+			    			if (p.hasPermission("awesomechallenges.premium")) {
+			    				pYaml.set(p.getName() + "." + type + "." + s + ".Amount", pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") + 1);
+						        int tier = pYaml.getInt(p.getName() + ".Playtime." + s + ".Tier");
+						        if (pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") >= vYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount")) {
+									pYaml.set(p.getName() + ".Playtime." + s + ".Amount", pYaml.getInt(p.getName() + ".Playtime." + s + ".Amount") - vYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount"));
+									pYaml.set(p.getName() + ".Playtime." + s + ".Tier", tier + 1);
+									List<String> commandList = vYaml.getStringList(s + ".Tier" + String.valueOf(tier) + ".Commands");
+									for (String c: commandList) {
+										Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
+									}
+									if (tier == vYaml.getInt(s + ".TierNumber")) {
+										sendMsgWithPrefix(getConfig().getString("ChallengeComplete").replace("%challenge%", s), p);
+									} else {
+										sendMsgWithPrefix(getConfig().getString("TierUp").replace("%tier%", String.valueOf(tier)).replace("%challenge%", s), p);
+									}
+						        }
+			    			}
+		    			}
+		    		}
+		    	}
 		        try {
 					pYaml.save(pFile);
 				} catch (IOException e) {
@@ -89,6 +123,7 @@ public class Main extends JavaPlugin{
 		try {
 			pYaml.save(pFile);
 			cYaml.save(cFile);
+			vYaml.save(vFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -98,6 +133,8 @@ public class Main extends JavaPlugin{
 	public File getCFile() { return cFile; }
 	public YamlConfiguration getPYaml() { return pYaml; }
 	public File getPFile() { return pFile; }
+	public YamlConfiguration getVYaml() { return vYaml; }
+	public File getVFile() { return vFile; }
 	
 	public void sendMsgWithPrefix(String s, Player p) {
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("ServerPrefix") + " " + s));
@@ -119,6 +156,15 @@ public class Main extends JavaPlugin{
 		}
 		
 		pYaml = YamlConfiguration.loadConfiguration(pFile);
+		
+		vFile = new File(Bukkit.getServer().getPluginManager().getPlugin("AwesomeChallenges").getDataFolder(), "premiumchallenges.yml");
+		if (!vFile.exists()) {
+			vFile.createNewFile();
+		} else {
+			premiumSet = true;
+		}
+		
+		vYaml = YamlConfiguration.loadConfiguration(vFile);
 	}
 	
 	
@@ -203,6 +249,55 @@ public class Main extends JavaPlugin{
 		}
 		for (int i = 0; i < tierNumber; i++) {
 			cYaml.set(name + ".Tier" + String.valueOf(i + 1) + ".Commands", Arrays.asList(commands[i])); 
+		}
+		
+	}
+	
+	public void setPremium() {
+		if (!vYaml.contains("Oak Log")) {
+			int[] Amounts = {32, 96, 256, 1024};
+			String[] Rewards = {"Stone Axe", "Iron Axe", "Diamond Axe", "Netherite Axe"};
+			String[] tierOne = {"give %player% minecraft:stone_axe 1"};
+			String[] tierTwo = {"give %player% minecraft:iron_axe 1"};
+			String[] tierThree = {"give %player% minecraft:diamond_axe 1"};
+			String[] tierFour = {"give %player% minecraft:netherite_axe 1"};
+			String[][] Commands = {tierOne, tierTwo, tierThree, tierFour};
+			premiumHook("Oak Log", "Mine", "OAK_LOG", 4, Amounts, "OAK_LOG", "Cut some Oak Trees", "Collect %amount% Oak Log (%collected%/%amount%)", Rewards, Commands);
+		}
+		if (!vYaml.contains("Bookshelf")) {
+			int[] Amounts = {8, 16};
+			String[] Rewards = {"Sharpness II Book", "Protection II Book"};
+			String[] tierOne = {"give %player% enchanted_book{StoredEnchantments:[{id:sharpness,lvl:2}]} 1"};
+			String[] tierTwo = {"give %player% enchanted_book{StoredEnchantments:[{id:protection,lvl:2}]} 1"};
+			String[][] Commands = {tierOne, tierTwo};
+			premiumHook("Bookshelf", "Craft", "BOOKSHELF", 2, Amounts, "BOOKSHELF", "Craft some Bookshelves", "Craft %amount% Bookshelves (%collected%/%amount%)", Rewards, Commands);
+		}
+		if (!vYaml.contains("Zombie")) {
+			int[] Amounts = {5, 10, 20};
+			String[] Rewards = {"Stone Sword", "Iron Sword", "Diamond Sword"};
+			String[] tierOne = {"give %player% minecraft:stone_sword 1"};
+			String[] tierTwo = {"give %player% minecraft:iron_sword 1"};
+			String[] tierThree = {"give %player% minecraft:diamond_sword 1"};
+			String[][] Commands = {tierOne, tierTwo, tierThree};
+			premiumHook("Zombie", "Kill", "ZOMBIE", 3, Amounts, "ZOMBIE_HEAD", "Kill some Zombies", "Kill %amount% Zombies (%collected%/%amount%)", Rewards, Commands);
+		}
+	}
+	
+	void premiumHook(String name, String type, String object, int tierNumber, int[] amounts, String icon, String desc, String task, String[] rewards, String[][] commands) {
+		vYaml.set(name + ".Type", type);
+		vYaml.set(name + ".Object", object);
+		vYaml.set(name + ".TierNumber", tierNumber);
+		for (int i = 0; i < tierNumber; i++) {
+			vYaml.set(name + ".Tier" + String.valueOf(i + 1) + ".Amount", amounts[i]);
+		}
+		vYaml.set(name + ".Icon", icon);
+		vYaml.set(name + ".Description", desc);
+		vYaml.set(name + ".Task", task);
+		for (int i = 0; i < tierNumber; i++) {
+			vYaml.set(name + ".Tier" + String.valueOf(i + 1) + ".Reward", rewards[i]);
+		}
+		for (int i = 0; i < tierNumber; i++) {
+			vYaml.set(name + ".Tier" + String.valueOf(i + 1) + ".Commands", Arrays.asList(commands[i])); 
 		}
 		
 	}

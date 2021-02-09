@@ -1,6 +1,6 @@
 name: AwesomeChallenges
 main: com.emiv.awesomechallenges.Main
-version: 1.5.1
+version: 1.6
 api-version: 1.16
 commands:
   awesomechallenges:
