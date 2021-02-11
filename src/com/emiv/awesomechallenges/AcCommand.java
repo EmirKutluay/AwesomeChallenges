@@ -44,12 +44,14 @@ public class AcCommand implements CommandExecutor {
 		return false;
 	}
 
+
 	
 	public void reloadCommand() {
 		Plugin pl = Bukkit.getServer().getPluginManager().getPlugin("AwesomeChallenges");
 		plugin.reloadConfig();
 		pl.getPluginLoader().disablePlugin(pl);
 		pl.getPluginLoader().enablePlugin(pl);
+		
 	}
 
 }

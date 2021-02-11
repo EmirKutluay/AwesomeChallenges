@@ -53,11 +53,14 @@ public class Main extends JavaPlugin{
 			e.printStackTrace();
 		}
 		
-		if (challengesSet == false) {
+		if (cYaml.getKeys(false).size() == 0) {
 			setChallenges();
 		}
-		if (premiumSet == false) {
+		if (vYaml.getKeys(false).size() == 0) {
 			setPremium();
+		}
+		if (Bukkit.getServer().getOnlinePlayers().size() > 0) {
+			setPlayerData();
 		}
 		Save();
 		
@@ -126,6 +129,47 @@ public class Main extends JavaPlugin{
 			vYaml.save(vFile);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void setPlayerData() {
+		for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+			if (!pYaml.contains(p.getName())) {
+				for (String s : cYaml.getKeys(false)) {
+					String type = cYaml.getString(s + ".Type");
+					pYaml.set(p.getName() + "." + type + "." + s + ".Amount", 0);
+					pYaml.set(p.getName() + "." + type + "." + s + ".Tier", 1);
+				}
+				if (p.hasPermission("awesomechallenges.premium")) {
+					if (this.getConfig().getString("PremiumChallenges").equals("true")) {
+						for (String s : vYaml.getKeys(false)) {
+							String type = vYaml.getString(s + ".Type");
+							pYaml.set(p.getName() + "." + type + "." + s + ".Amount", 0);
+							pYaml.set(p.getName() + "." + type + "." + s + ".Tier", 1);
+						}
+					}			
+				}
+			} else {
+				for (String s : cYaml.getKeys(false)) {
+					String type = cYaml.getString(s + ".Type");
+					if (!pYaml.contains(p.getName() + "." + type + "." + s + ".Amount")) {
+						pYaml.set(p.getName() + "." + type + "." + s + ".Amount", 0);
+						pYaml.set(p.getName() + "." + type + "." + s + ".Tier", 1);
+					}
+				}
+				if (p.hasPermission("awesomechallenges.premium")) {
+					if (this.getConfig().getString("PremiumChallenges").equals("true")) {
+						for (String s : vYaml.getKeys(false)) {
+							String type = vYaml.getString(s + ".Type");
+							if (!pYaml.contains(p.getName() + "." + type + "." + s + ".Amount")) {
+								pYaml.set(p.getName() + "." + type + "." + s + ".Amount", 0);
+								pYaml.set(p.getName() + "." + type + "." + s + ".Tier", 1);
+							}
+						}
+					}
+				}
+			}
+			Save();
 		}
 	}
 	
