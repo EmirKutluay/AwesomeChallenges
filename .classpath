@@ -6,6 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/memir/Desktop/spigot-1.16.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/memir/Desktop/MythicMobs.jar"/>
+	<classpathentry kind="lib" path="C:/Users/memir/Desktop/spigot-1.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

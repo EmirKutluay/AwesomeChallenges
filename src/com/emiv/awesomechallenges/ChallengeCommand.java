@@ -47,14 +47,6 @@ public class ChallengeCommand implements CommandExecutor {
 	
 	private void mainInv(Player p) {
 		Inventory gui = Bukkit.createInventory(null, 27, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("ChallengeMenuTitle")));
-		int[] gpLoc = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
-		for (int i: gpLoc) {
-			ItemStack grayPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-			ItemMeta grayPaneMeta = grayPane.getItemMeta();
-			grayPaneMeta.setDisplayName(" ");
-			grayPane.setItemMeta(grayPaneMeta);
-			gui.setItem(i, grayPane);
-		}
 		//Free
 		ItemStack freeChallenges = new ItemStack(Material.IRON_INGOT);
 		ItemMeta freeMeta = freeChallenges.getItemMeta();
@@ -71,7 +63,6 @@ public class ChallengeCommand implements CommandExecutor {
 		p.openInventory(gui);
 	}
 
-	@SuppressWarnings("unused")
 	public void freeUI(Player p) {
 		ArrayList<String> playerCh = new ArrayList<>();
 		int challengeAmount = plugin.getCYaml().getKeys(false).size();
@@ -109,28 +100,7 @@ public class ChallengeCommand implements CommandExecutor {
 	
 	private void freePage(Player p, int chAmo, int invSize, ArrayList<String> playerCh) {
 		Inventory gui = Bukkit.createInventory(null, invSize, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("UserChallengesTitle")));
-		//Glass Panes
-		int[] gpLoc27 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
-		int[] gpLoc36 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
-		int[] gpLoc45 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44};
-		int[] gpLoc54 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
-		int[] gpLoc = null;
-		if (invSize == 27) {
-			gpLoc = gpLoc27;
-		} else if (invSize == 36) {
-			gpLoc = gpLoc36;
-		} else if (invSize == 45) {
-			gpLoc = gpLoc45;
-		} else {
-			gpLoc = gpLoc54;
-		}
-		for (int i : gpLoc) {
-			ItemStack grayPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-			ItemMeta grayPaneMeta = grayPane.getItemMeta();
-			grayPaneMeta.setDisplayName(" ");
-			grayPane.setItemMeta(grayPaneMeta);
-			gui.setItem(i, grayPane);
-		}
+		
 		//Challenges
 		int[] cLoc = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
 		for (int i = 0; i < playerCh.size(); i ++) {
@@ -159,7 +129,6 @@ public class ChallengeCommand implements CommandExecutor {
 		p.openInventory(gui);
 	}
 	
-	@SuppressWarnings("unused")
 	public void preUI(Player p) {
 		ArrayList<String> playerCh = new ArrayList<>();
 		int challengeAmount = plugin.getVYaml().getKeys(false).size();
@@ -197,28 +166,7 @@ public class ChallengeCommand implements CommandExecutor {
 	
 	private void prePage(Player p, int chAmo, int invSize, ArrayList<String> playerCh) {
 		Inventory gui = Bukkit.createInventory(null, invSize, ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("PremiumChallengesTitle")));
-		//Glass Panes
-		int[] gpLoc27 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
-		int[] gpLoc36 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35};
-		int[] gpLoc45 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44};
-		int[] gpLoc54 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
-		int[] gpLoc = null;
-		if (invSize == 27) {
-			gpLoc = gpLoc27;
-		} else if (invSize == 36) {
-			gpLoc = gpLoc36;
-		} else if (invSize == 45) {
-			gpLoc = gpLoc45;
-		} else {
-			gpLoc = gpLoc54;
-		}
-		for (int i : gpLoc) {
-			ItemStack grayPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-			ItemMeta grayPaneMeta = grayPane.getItemMeta();
-			grayPaneMeta.setDisplayName(" ");
-			grayPane.setItemMeta(grayPaneMeta);
-			gui.setItem(i, grayPane);
-		}
+		
 		//Challenges
 		int[] cLoc = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
 		for (int i = 0; i < playerCh.size(); i ++) {

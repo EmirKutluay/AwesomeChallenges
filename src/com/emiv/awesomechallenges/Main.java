@@ -46,6 +46,7 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new onCraft(this), this);
 		Bukkit.getPluginManager().registerEvents(new onSmelt(this), this);
 		Bukkit.getPluginManager().registerEvents(new onKill(this), this);
+		Bukkit.getPluginManager().registerEvents(new onMythicKill(this), this);
 		
 		try {
 			initiateFiles();
@@ -73,19 +74,21 @@ public class Main extends JavaPlugin{
 		    			for (Player p : Bukkit.getOnlinePlayers()) {
 			    			pYaml.set(p.getName() + "." + type + "." + s + ".Amount", pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") + 1);
 					        int tier = pYaml.getInt(p.getName() + ".Playtime." + s + ".Tier");
-					        if (pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") >= cYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount")) {
-								pYaml.set(p.getName() + ".Playtime." + s + ".Amount", pYaml.getInt(p.getName() + ".Playtime." + s + ".Amount") - cYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount"));
-								pYaml.set(p.getName() + ".Playtime." + s + ".Tier", tier + 1);
-								List<String> commandList = cYaml.getStringList(s + ".Tier" + String.valueOf(tier) + ".Commands");
-								for (String c: commandList) {
-									Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
-								}
-								if (tier == cYaml.getInt(s + ".TierNumber")) {
-									sendMsgWithPrefix(getConfig().getString("ChallengeComplete").replace("%challenge%", s), p);
-								} else {
-									sendMsgWithPrefix(getConfig().getString("TierUp").replace("%tier%", String.valueOf(tier)).replace("%challenge%", s), p);
-								}
-					        }
+					        if (tier <= cYaml.getInt(s + ".TierNumber")) {
+					        	if (pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") >= cYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount")) {
+									pYaml.set(p.getName() + ".Playtime." + s + ".Amount", pYaml.getInt(p.getName() + ".Playtime." + s + ".Amount") - cYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount"));
+									pYaml.set(p.getName() + ".Playtime." + s + ".Tier", tier + 1);
+									List<String> commandList = cYaml.getStringList(s + ".Tier" + String.valueOf(tier) + ".Commands");
+									for (String c: commandList) {
+										Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
+									}
+									if (tier == cYaml.getInt(s + ".TierNumber")) {
+										sendMsgWithPrefix(getConfig().getString("ChallengeComplete").replace("%challenge%", s), p);
+									} else {
+										sendMsgWithPrefix(getConfig().getString("TierUp").replace("%tier%", String.valueOf(tier)).replace("%challenge%", s), p);
+									}
+						        }
+					        }				        
 		    			}
 		    		}
 		    	}
@@ -96,19 +99,21 @@ public class Main extends JavaPlugin{
 			    			if (p.hasPermission("awesomechallenges.premium")) {
 			    				pYaml.set(p.getName() + "." + type + "." + s + ".Amount", pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") + 1);
 						        int tier = pYaml.getInt(p.getName() + ".Playtime." + s + ".Tier");
-						        if (pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") >= vYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount")) {
-									pYaml.set(p.getName() + ".Playtime." + s + ".Amount", pYaml.getInt(p.getName() + ".Playtime." + s + ".Amount") - vYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount"));
-									pYaml.set(p.getName() + ".Playtime." + s + ".Tier", tier + 1);
-									List<String> commandList = vYaml.getStringList(s + ".Tier" + String.valueOf(tier) + ".Commands");
-									for (String c: commandList) {
-										Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
-									}
-									if (tier == vYaml.getInt(s + ".TierNumber")) {
-										sendMsgWithPrefix(getConfig().getString("ChallengeComplete").replace("%challenge%", s), p);
-									} else {
-										sendMsgWithPrefix(getConfig().getString("TierUp").replace("%tier%", String.valueOf(tier)).replace("%challenge%", s), p);
-									}
-						        }
+						        if (tier <= vYaml.getInt(s + ".TierNumber")) {
+						        	if (pYaml.getInt(p.getName() + "." + type + "." + s + ".Amount") >= vYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount")) {
+										pYaml.set(p.getName() + ".Playtime." + s + ".Amount", pYaml.getInt(p.getName() + ".Playtime." + s + ".Amount") - vYaml.getInt(s + ".Tier" + String.valueOf(tier) + ".Amount"));
+										pYaml.set(p.getName() + ".Playtime." + s + ".Tier", tier + 1);
+										List<String> commandList = vYaml.getStringList(s + ".Tier" + String.valueOf(tier) + ".Commands");
+										for (String c: commandList) {
+											Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
+										}
+										if (tier == vYaml.getInt(s + ".TierNumber")) {
+											sendMsgWithPrefix(getConfig().getString("ChallengeComplete").replace("%challenge%", s), p);
+										} else {
+											sendMsgWithPrefix(getConfig().getString("TierUp").replace("%tier%", String.valueOf(tier)).replace("%challenge%", s), p);
+										}
+							        }
+						        } 
 			    			}
 		    			}
 		    		}
@@ -246,7 +251,7 @@ public class Main extends JavaPlugin{
 			String[] Rewards = {"15x Lapis Lazuli & 5x Levels"};
 			String[] tierOne = {"give %player% lapis_lazuli 15", "xp add %player% 5 levels"};
 			String[][] Commands = {tierOne};
-			challengeHook("Enchanting Table", "Craft", "ENCHANTING_TABLE", 1, Amounts, "ENCHANTING_TABLE", "Craft an Enchanting Table", "Craft %amount% Enchanting Table (%collected%/%amount%)", Rewards, Commands);
+			challengeHook("Enchanting Table", "Craft", "ENCHANTMENT_TABLE", 1, Amounts, "ENCHANTMENT_TABLE", "Craft an Enchanting Table", "Craft %amount% Enchanting Table (%collected%/%amount%)", Rewards, Commands);
 		}
 		if (!cYaml.contains("Chicken")) {
 			int[] Amounts = {16, 32, 64};
@@ -265,7 +270,7 @@ public class Main extends JavaPlugin{
 			String[] tierTwo = {"give %player% diamond 3"};
 			String[] tierThree = {"give %player% diamond 10"};
 			String[][] Commands = {tierOne, tierTwo, tierThree};
-			challengeHook("Cow", "Kill", "COW", 3, Amounts, "COW_SPAWN_EGG", "Kill some Cows", "Kill %amount% Cows (%collected%/%amount%)", Rewards, Commands);
+			challengeHook("Cow", "Kill", "COW", 3, Amounts, "COOKED_BEEF", "Kill some Cows", "Kill %amount% Cows (%collected%/%amount%)", Rewards, Commands);
 		}
 		if (!cYaml.contains("Spend Time")) {
 			int[] Amounts = {3600, 10800, 36000};
@@ -274,7 +279,7 @@ public class Main extends JavaPlugin{
 			String[] tierTwo = {"give %player% diamond 10", "give %player% coal 32"};
 			String[] tierThree = {"give %player% diamond 32", "give %player% coal 128"};
 			String[][] Commands = {tierOne, tierTwo, tierThree};
-			challengeHook("Spend Time", "Playtime", "Seconds", 3, Amounts, "CLOCK", "Spend some time", "Achieve %amount% seconds of playtime (%collected%/%amount%)", Rewards, Commands);
+			challengeHook("Spend Time", "Playtime", "Seconds", 3, Amounts, "WATCH", "Spend some time", "Achieve %amount% seconds of playtime (%collected%/%amount%)", Rewards, Commands);
 		}
 	}
 	
@@ -298,7 +303,7 @@ public class Main extends JavaPlugin{
 	}
 	
 	public void setPremium() {
-		if (!vYaml.contains("Oak Log")) {
+		if (!vYaml.contains("Log")) {
 			int[] Amounts = {32, 96, 256, 1024};
 			String[] Rewards = {"Stone Axe", "Iron Axe", "Diamond Axe", "Netherite Axe"};
 			String[] tierOne = {"give %player% minecraft:stone_axe 1"};
@@ -306,7 +311,7 @@ public class Main extends JavaPlugin{
 			String[] tierThree = {"give %player% minecraft:diamond_axe 1"};
 			String[] tierFour = {"give %player% minecraft:netherite_axe 1"};
 			String[][] Commands = {tierOne, tierTwo, tierThree, tierFour};
-			premiumHook("Oak Log", "Mine", "OAK_LOG", 4, Amounts, "OAK_LOG", "Cut some Oak Trees", "Collect %amount% Oak Log (%collected%/%amount%)", Rewards, Commands);
+			premiumHook("Log", "Mine", "LOG", 4, Amounts, "LOG", "Cut some Trees", "Collect %amount% Log (%collected%/%amount%)", Rewards, Commands);
 		}
 		if (!vYaml.contains("Bookshelf")) {
 			int[] Amounts = {8, 16};
@@ -323,7 +328,16 @@ public class Main extends JavaPlugin{
 			String[] tierTwo = {"give %player% minecraft:iron_sword 1"};
 			String[] tierThree = {"give %player% minecraft:diamond_sword 1"};
 			String[][] Commands = {tierOne, tierTwo, tierThree};
-			premiumHook("Zombie", "Kill", "ZOMBIE", 3, Amounts, "ZOMBIE_HEAD", "Kill some Zombies", "Kill %amount% Zombies (%collected%/%amount%)", Rewards, Commands);
+			premiumHook("Zombie", "Kill", "ZOMBIE", 3, Amounts, "DIAMOND_SWORD", "Kill some Zombies", "Kill %amount% Zombies (%collected%/%amount%)", Rewards, Commands);
+		}
+		if (getServer().getPluginManager().getPlugin("MythicMobs") != null) {
+			if (!vYaml.contains("Skeleton King")) {
+				int[] Amounts = {1};
+				String[] Rewards = {"10x Diamond"};
+				String[] tierOne = {"give %player% diamond 10"};
+				String[][] Commands = {tierOne};
+				premiumHook("Skeleton King", "MythicKill", "SkeletonKing", 1, Amounts, "SKELETON_SKULL", "Kill a Skeleton King", "Kill %amount% Skeleton King (%collected%/%amount%)", Rewards, Commands);
+			}
 		}
 	}
 	
