@@ -1,6 +1,6 @@
 name: AwesomeChallenges
 main: com.emiv.awesomechallenges.Main
-version: 1.7
+version: 1.8.1
 commands:
   awesomechallenges:
     aliases: [ac, awesomechallenge]

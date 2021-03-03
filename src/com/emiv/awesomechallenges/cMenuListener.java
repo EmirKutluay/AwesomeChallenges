@@ -38,6 +38,14 @@ public class cMenuListener implements Listener {
 					}
 				}
 			}
+		} else if (ChatColor.translateAlternateColorCodes('&', e.getView().getTitle()).equals(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("UserChallengesTitle")))) {
+			if (e.getCurrentItem() != null) {
+				e.setCancelled(true);
+			}
+		} else if (ChatColor.translateAlternateColorCodes('&', e.getView().getTitle()).equals(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("PremiumChallengesTitle")))) {
+			if (e.getCurrentItem() != null) {
+				e.setCancelled(true);
+			}
 		}
 	}
 	
